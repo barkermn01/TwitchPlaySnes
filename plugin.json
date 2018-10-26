@@ -1,0 +1,26 @@
+{
+    "name":"Twitch Play SNES",   
+    "description":"This plugin is a Twitch Play for the SNES9x Emulator",
+    "version":"1.0.0",
+    "lisence":"GPL",
+    "requires":{
+    },
+    "injection":{
+        "TwitchChat":{
+            "AllMessages":"registerTwitchMessageHandler",
+            "SendMessage":"registerTwitchMessageSender"
+        },
+        "State":{
+            "Get":"getSavedState"
+        },
+        "Web":{
+            "Hosting":"registerWebHandlers",
+            "MenuRegister":"registerWebNavHandler"
+        }
+    },
+    "plugin":{
+        "file":"TwitchPlaySNES",
+        "load":"init",
+        "unload":"unload"
+    }
+}

@@ -1,0 +1,10 @@
+C:\Users\Marti\source\repos\EventEmitter\EventEmitter\bin\Debug\EventEmitter.exe.config
+C:\Users\Marti\source\repos\EventEmitter\EventEmitter\bin\Debug\EventEmitter.exe
+C:\Users\Marti\source\repos\EventEmitter\EventEmitter\bin\Debug\EventEmitter.pdb
+C:\Users\Marti\source\repos\EventEmitter\EventEmitter\obj\Debug\EventEmitter.csprojResolveAssemblyReference.cache
+C:\Users\Marti\source\repos\EventEmitter\EventEmitter\obj\Debug\EventEmitter.csproj.CoreCompileInputs.cache
+C:\Users\Marti\source\repos\EventEmitter\EventEmitter\obj\Debug\EventEmitter.exe
+C:\Users\Marti\source\repos\EventEmitter\EventEmitter\obj\Debug\EventEmitter.pdb
+C:\Users\Marti\source\repos\EventEmitter\EventEmitter\bin\Debug\WindowsInput.dll
+C:\Users\Marti\source\repos\EventEmitter\EventEmitter\bin\Debug\WindowsInput.pdb
+C:\Users\Marti\source\repos\EventEmitter\EventEmitter\bin\Debug\WindowsInput.xml

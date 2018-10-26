@@ -1,0 +1,22 @@
+div.bp3-body{
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-orient: horizontal;
+    -webkit-box-direction: normal;
+    -ms-flex-direction: row;
+    flex-direction: row;
+    margin: auto;
+}
+
+div.bp3-container{
+    margin-right:auto;
+    margin-left:10px;
+    margin-top:10px;
+}
+
+span.select-right-hand{
+    display: block;
+    float: right;
+    margin-right: -41px;
+}
