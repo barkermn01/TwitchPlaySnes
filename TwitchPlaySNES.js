@@ -211,9 +211,9 @@ function LetsPlaySNES(accessors){
             return new Promise((s,f) => {
                 this.controls.toggleEnabled();
                 if(this.controls.getEnabledState()){
-                    this.messageSender("TwitchPlay Controls have been abled have fun!", err => { console.log(err); });
+                    this.messageSender("TwitchPlay Controls have been abled have fun!");
                 }else{
-                    this.messageSender("Sorry TwitchPlay Controls have been disabled.", err => { console.log(err); });
+                    this.messageSender("Sorry TwitchPlay Controls have been disabled.");
                 }
                 s({
                     "status":200,
