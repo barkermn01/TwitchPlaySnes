@@ -1,4 +1,5 @@
 var fs = require('fs');
+const KeyMap = require('./lib/KeyMap');
 function LetsPlaySNES(accessors){
     // holds the current state
     this.state;
@@ -21,9 +22,23 @@ function LetsPlaySNES(accessors){
     /* handle reading all messages */
     this.registerTwitchMessageHandler = (handler) => {
         handler((msg) => {
-            let command = this.controls.getKeyForCommand(msg.message.split(" ")[0].toLowerCase());
-            if(command){
-                this.proccess.simulateKeyPress(command);
+
+            if(msg.channel.toLowerCase().substr(1, msg.channel.toLowerCase().length) !== msg.username.toLowerCase()){
+                clearInterval(this.timer);
+                this.timer = setInterval(inactiveNotify, 120000);
+
+                let handled = false;
+
+                if(msg.user_type === "mod"){
+                    handled = isModCommand(msg);
+                }
+
+                msg.message.split(" ").forEach(element => {
+                    let command = this.controls.getKeyForCommand(element);
+                    if(command){
+                        this.proccess.simulateKeyPress(command);
+                    }
+                });
             }
         });
     }
@@ -31,6 +46,111 @@ function LetsPlaySNES(accessors){
     this.registerTwitchMessageSender = (messageSender) => {
         this.messageSender = messageSender;
     }
+
+    let getRandomInt = (min, max) => {
+        min = Math.ceil(min);
+        max = Math.floor(max);
+        return Math.floor(Math.random() * (max - min + 1)) + min;
+    }
+
+    let keepAliveMessages = [
+        "Hey Chat you there?", 
+        "Why not send a command like !up", 
+        "Hello, i can't play that game without you.", 
+        "Well 2 Mins without anyone playing, the game is feeling left out.",
+        "Are you feeling down why not play?",
+        "Wonder what the Konami Code does in this game?",
+        "!up in the clouds why don't you come !down and play?"
+    ];
+    let lassMessgae = null;
+
+    let inactiveNotify = () => {
+        if(this.messageSender !== undefined && this.controls !== undefined){
+            let rand = null
+            while(lassMessgae === rand){
+                rand = getRandomInt(0, keepAliveMessages.length-1);
+            }
+            if(this.controls.getEnabledState()){
+                this.messageSender(keepAliveMessages[rand]);
+            }
+            
+        }
+    };
+
+    let mod_commands = {
+        "!reset": (args) => { this.messageSender("Sorry but the !rest command is not ready yet."); },
+        
+        "!disable": (args) => { 
+            if(this.controls.getEnabledState()){
+                this.controls.disable();
+                this.messageSender("Sorry TwitchPlays Controls have been disabled.");
+            }
+        },
+
+        "!enable": (args) => { 
+            if(!this.controls.getEnabledState()){
+                this.controls.enable();
+                this.messageSender("TwitchPlays Controls have been activated have fun!");
+            }
+        },
+
+        "!add_input": (args) => { this.messageSender("Sorry but the !add_input command is not ready yet."); },
+        "!del_input": (args) => { this.messageSender("Sorry but the !del_input command is not ready yet."); },
+        "!list_games": (args) => { this.messageSender("Sorry but the !list_games command is not ready yet."); },
+
+        "!exit": (args) => { 
+            if(!this.proccess.isProccessRunning()){
+                this.messageSender(`@${msg.username} Snes9x is not running`); 
+            }
+            this.proccess.stop();
+            this.messageSender("Snes9x has been exited successfully");
+        },
+        "!set_game": (args) => { this.messageSender("Sorry but the !set_game command is not ready yet."); },
+
+        "!start": (args) => { 
+            if(!this.proccess.isProccessRunning()){
+                this.messageSender(`@${msg.username} Snes9x is already running`); 
+            }
+            this.proccess.start();
+            this.messageSender("Snes9x has been started successfully");
+        },
+
+        "!save_state": (args) => { 
+            if(typeof args[1] !== "undefined" && parseInt(args[1]) >= 1 && parseInt(args[1]) <= 9 ){
+                this.messageSender(`@${msg.username} please supply a slot between 1 and 9 to save into`); 
+                return;
+            }
+            let name = "FUNCTION" + args[1];
+            this.proccess.shiftKeyPress(KeyMap[name]);
+            this.messageSender("State saved to slot 1"); 
+        },
+
+        "!load_state":  (args) => { 
+            if(typeof args[1] !== "undefined" && parseInt(args[1]) >= 1 && parseInt(args[1]) <= 9 ){
+                this.messageSender(`@${msg.username} please supply a slot between 1 and 9 to load from`); 
+                return;
+            }
+            let name = "FUNCTION" + args[1];
+            this.proccess.KeyPress(KeyMap[name]);
+            this.messageSender("State saved to slot 1"); 
+            }
+    };
+
+    let isModCommand = (msg) => {
+        let text = msg.message;
+        let words = text.split(" ");
+        cmd = words[0];
+        if(typeof mod_commands[cmd] !== "undefined"){
+            new Promise((resolve) =>{
+                mod_commands[cmd](args);
+                resolve(true);
+            });
+            return true;
+        }
+        return false;
+    };
+
+    this.timer = setInterval(inactiveNotify, 120000);
     
     this.registerWebHandlers = (WebServerHandlerRegistration) => {
 
@@ -211,9 +331,9 @@ function LetsPlaySNES(accessors){
             return new Promise((s,f) => {
                 this.controls.toggleEnabled();
                 if(this.controls.getEnabledState()){
-                    this.messageSender("TwitchPlay Controls have been abled have fun!");
+                    this.messageSender("TwitchPlays Controls have been activated have fun!");
                 }else{
-                    this.messageSender("Sorry TwitchPlay Controls have been disabled.");
+                    this.messageSender("Sorry TwitchPlays Controls have been disabled.");
                 }
                 s({
                     "status":200,
