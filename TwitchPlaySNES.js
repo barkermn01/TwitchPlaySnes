@@ -1,42 +1,42 @@
 var fs = require('fs');
-const KeyMap = require('./lib/KeyMap');
 function LetsPlaySNES(accessors){
     // holds the current state
     this.state;
     this.procReady = false;
 
-    this.proccess;
+    this.process;
     this.controls;
 
     this.messageSender;
 
+    this.inputBuffer;
+
     /* Allow this application to store state */
     this.getSavedState = (state) => {
-        let Proccess = require("./lib/Proccess");
+        let Process = require("./lib/Process");
         let Controls = require("./lib/Controls");
+        let InputBuffer = require("./lib/InputBuffer");
 
         this.controls = new Controls(state);
-        this.proccess = new Proccess(state, this.controls);
+        this.process = new Process(state, this.controls);
+        this.inputBuffer = new InputBuffer(this.process);
     }
 
     /* handle reading all messages */
     this.registerTwitchMessageHandler = (handler) => {
         handler((msg) => {
+            clearInterval(this.timer);
+            this.timer = setInterval(inactiveNotify, 120000);
 
-            if(msg.channel.toLowerCase().substr(1, msg.channel.toLowerCase().length) !== msg.username.toLowerCase()){
-                clearInterval(this.timer);
-                this.timer = setInterval(inactiveNotify, 120000);
+            if(msg.mod || msg.username.toLowerCase() === accessors.config.get("Twitch").channelName.toLowerCase()){
+                if(isModCommand(msg)) return;
+            }
 
-                let handled = false;
-
-                if(msg.user_type === "mod"){
-                    handled = isModCommand(msg);
-                }
-
+            if(msg.username.toLowerCase() !== accessors.config.get("Twitch").username){
                 msg.message.split(" ").forEach(element => {
                     let command = this.controls.getKeyForCommand(element);
                     if(command){
-                        this.proccess.simulateKeyPress(command);
+                        this.inputBuffer.addCommand(command);
                     }
                 });
             }
@@ -78,74 +78,130 @@ function LetsPlaySNES(accessors){
     };
 
     let mod_commands = {
-        "!reset": (args) => { this.messageSender("Sorry but the !rest command is not ready yet."); },
-        
+        "!reset": (args) => { this.messageSender("Sorry but the !rest command is not ready yet."); return true;},
+        "!add_input": (args) => { this.messageSender("Sorry but the !add_input command is not ready yet."); return true; },
+        "!del_input": (args) => { this.messageSender("Sorry but the !del_input command is not ready yet."); return true; },
+        "!list_games": (args) => { this.messageSender("Sorry but the !list_games command is not ready yet."); return true; },
+        "!set_game": (args) => { this.messageSender("Sorry but the !set_game command is not ready yet."); return true; },
+
         "!disable": (args) => { 
+            if(!this.process.isProcessRunning()){
+                this.messageSender(`@${msg.username} Snes9x is not running controls are not available.`);
+                return true;
+            }
+            if(!this.process.isProcessReady()){
+                this.messageSender(`@${msg.username} Snes9x is not ready controls are not available.`); return true;
+            }
             if(this.controls.getEnabledState()){
                 this.controls.disable();
+                this.inputBuffer.Stop();
                 this.messageSender("Sorry TwitchPlays Controls have been disabled.");
+                return true;
             }
         },
 
-        "!enable": (args) => { 
+        "!enable": (args, msg) => { 
+            if(!this.process.isProcessRunning()){
+                this.messageSender(`@${msg.username} Snes9x is not running yet please !start it and wait a few seconds before enabling the controls.`);
+                return true;
+            }
+            if(!this.process.isProcessReady()){
+                this.messageSender(`@${msg.username} Snes9x is not ready yet please wait a few seconds before enabling the controls.`);
+                return true;
+            }
             if(!this.controls.getEnabledState()){
                 this.controls.enable();
+                this.inputBuffer.Start();
                 this.messageSender("TwitchPlays Controls have been activated have fun!");
+                return true;
             }
         },
 
-        "!add_input": (args) => { this.messageSender("Sorry but the !add_input command is not ready yet."); },
-        "!del_input": (args) => { this.messageSender("Sorry but the !del_input command is not ready yet."); },
-        "!list_games": (args) => { this.messageSender("Sorry but the !list_games command is not ready yet."); },
-
-        "!exit": (args) => { 
-            if(!this.proccess.isProccessRunning()){
-                this.messageSender(`@${msg.username} Snes9x is not running`); 
+        "!exit": (args, msg) => { 
+            if(!this.process.isProcessRunning()){
+                this.messageSender(`@${msg.username} Snes9x is not running`);
+                return true;
             }
-            this.proccess.stop();
+            this.process.stop();
             this.messageSender("Snes9x has been exited successfully");
+            return true;
         },
-        "!set_game": (args) => { this.messageSender("Sorry but the !set_game command is not ready yet."); },
 
-        "!start": (args) => { 
-            if(!this.proccess.isProccessRunning()){
-                this.messageSender(`@${msg.username} Snes9x is already running`); 
+        "!start": (args, msg) => { 
+            if(this.process.isProcessRunning()){
+                this.messageSender(`@${msg.username} Snes9x is already running`);
+                return true;
             }
-            this.proccess.start();
+            this.process.start();
             this.messageSender("Snes9x has been started successfully");
+            return true;
         },
 
-        "!save_state": (args) => { 
-            if(typeof args[1] !== "undefined" && parseInt(args[1]) >= 1 && parseInt(args[1]) <= 9 ){
+        "!save_state": (args, msg) => { 
+            if(typeof args[1] === "undefined" || !( parseInt(args[1]) >= 1 && parseInt(args[1]) <= 9 )){
                 this.messageSender(`@${msg.username} please supply a slot between 1 and 9 to save into`); 
-                return;
+                return true;
             }
-            let name = "FUNCTION" + args[1];
-            this.proccess.shiftKeyPress(KeyMap[name]);
-            this.messageSender("State saved to slot 1"); 
+            let name = "F1" + args[1];
+            this.process.simulateKeyPress(name);
+            this.messageSender("State saved to slot "+args[1]);
+            return true;
         },
 
-        "!load_state":  (args) => { 
-            if(typeof args[1] !== "undefined" && parseInt(args[1]) >= 1 && parseInt(args[1]) <= 9 ){
+        "!load_state":  (args, msg) => { 
+            if(typeof args[1] === "undefined" || !(parseInt(args[1]) >= 1 && parseInt(args[1]) <= 9 )){
                 this.messageSender(`@${msg.username} please supply a slot between 1 and 9 to load from`); 
-                return;
+                return true;
             }
-            let name = "FUNCTION" + args[1];
-            this.proccess.KeyPress(KeyMap[name]);
-            this.messageSender("State saved to slot 1"); 
+            let name = "F" + args[1];
+            this.process.simulateKeyPress(name);
+            this.messageSender("State Loaded from slot "+args[1]);
+            return true;
+        },
+
+        "!help":  (args, msg) => { 
+            if(typeof args[1] === "undefined"){
+                this.messageSender(`@${msg.username} commands you can use !help <command>, !disable, !enable, !exit, !start, !save_state <number between 1 and 9>, , !load_state <number between 1 and 9>`); 
+                return true;
+            }else{
+                switch(args[1]){
+                    case "!disable":
+                        this.messageSender(`@${msg.username} stops the bot accepting input from chat`);
+                    return true;
+                    case "!enabled":
+                        this.messageSender(`@${msg.username} allows the bot to accept input from chat`);
+                    return true;
+                    case "!exit":
+                        this.messageSender(`@${msg.username} exits the emulator`);
+                    return true;
+                    case "!start":
+                        this.messageSender(`@${msg.username} starts the emulator`);
+                    return true;
+                    case "!save_state":
+                        this.messageSender(`@${msg.username} takes argument a number between 1 and 9 tells the emulator to save the state in slot 1 to 9 based on input`);
+                    return true;
+                    case "!load_state":
+                        this.messageSender(`@${msg.username} takes argument a number between 1 and 9tells the emulator to load the state in slot 1 to 9 based on input`);
+                    return true;
+                    default:
+                        this.messageSender(`@${msg.username} commands you can use !help <command>, !disable, !enable, !exit, !start, !save_state <number between 1 and 9>, , !load_state <number between 1 and 9>`); 
+                    return true;
+                }
             }
+        }
     };
 
     let isModCommand = (msg) => {
         let text = msg.message;
-        let words = text.split(" ");
-        cmd = words[0];
+        let args = text.split(" ");
+        cmd = args[0];
         if(typeof mod_commands[cmd] !== "undefined"){
+            let state = false;
             new Promise((resolve) =>{
-                mod_commands[cmd](args);
-                resolve(true);
+                 state = mod_commands[cmd](args, msg)?true:false;
+                resolve(state);
             });
-            return true;
+            return state;
         }
         return false;
     };
@@ -189,7 +245,7 @@ function LetsPlaySNES(accessors){
                 s({
                     "status":200,
                     "headers":{"content-type":"application/json"},
-                    "body":JSON.stringify(this.proccess.getRomsForUI())
+                    "body":JSON.stringify(this.process.getRomsForUI())
                 });
             });
         });
@@ -201,18 +257,18 @@ function LetsPlaySNES(accessors){
                     req.setEncoding('utf8');
                     req.on('data', (body) => {
                         let data = JSON.parse(body);
-                        this.proccess.selectRom(data.selectedRom);
+                        this.process.selectRom(data.selectedRom);
                         s({
                             "status":200,
                             "headers":{"content-type":"application/json"},
-                            "body":JSON.stringify(this.proccess.getSelectedRom())
+                            "body":JSON.stringify(this.process.getSelectedRom())
                         });
                     });
                 }else{
                     s({
                         "status":200,
                         "headers":{"content-type":"application/json"},
-                        "body":JSON.stringify(this.proccess.getSelectedRom())
+                        "body":JSON.stringify(this.process.getSelectedRom())
                     });
                 }
             });
@@ -222,7 +278,7 @@ function LetsPlaySNES(accessors){
         // handle starting
         WebServerHandlerRegistration(new RegExp("LetsPlaySNES\/start"), (req) => {
             return new Promise((s,f) => {
-                this.proccess.start();
+                this.process.start();
                 s({
                     "status":200,
                     "headers":{"content-type":"text/plain"},
@@ -234,7 +290,7 @@ function LetsPlaySNES(accessors){
         // handle stopping
         WebServerHandlerRegistration(new RegExp("LetsPlaySNES\/stop"), (req) => {
             return new Promise((s,f) => {
-                this.proccess.stop();
+                this.process.stop();
                 this.controls.disable();
                 s({
                     "status":200,
@@ -250,7 +306,7 @@ function LetsPlaySNES(accessors){
                 s({
                     "status":200,
                     "headers":{"content-type":"application/json"},
-                    "body":JSON.stringify({running:this.proccess.isProccessRunning(), ready:this.proccess.isProccessReady(), controls:this.controls.getEnabledState()})
+                    "body":JSON.stringify({running:this.process.isProcessRunning(), ready:this.process.isProcessReady(), controls:this.controls.getEnabledState()})
                 });
             });
         });
@@ -332,8 +388,10 @@ function LetsPlaySNES(accessors){
                 this.controls.toggleEnabled();
                 if(this.controls.getEnabledState()){
                     this.messageSender("TwitchPlays Controls have been activated have fun!");
+                    this.inputBuffer.Start();
                 }else{
                     this.messageSender("Sorry TwitchPlays Controls have been disabled.");
+                    this.inputBuffer.Stop();
                 }
                 s({
                     "status":200,
@@ -350,7 +408,8 @@ function LetsPlaySNES(accessors){
     }
 
     this.unload = () => {
-        this.terminateProc();
+        this.process.stop();
+
     }
 
     this.init = () => {

@@ -3,6 +3,7 @@ using System.Diagnostics;
 using System.Runtime.InteropServices;
 using WindowsInput.Native;
 using WindowsInput;
+using System.Net.Configuration;
 using System.Threading;
 
 namespace EventEmitter
@@ -16,7 +17,7 @@ namespace EventEmitter
         {
             int pid = Convert.ToInt32(args[0]);
             int msg = (int)new System.ComponentModel.Int32Converter().ConvertFromString(args[1]);
-            int key = (int)new System.ComponentModel.Int32Converter().ConvertFromString(args[2]);
+            int key = (int)new System.ComponentModel.Int32Converter().ConvertFromString(args[2]);            
 
             Process proc = Process.GetProcessById(pid);
             IntPtr window = proc.MainWindowHandle;
@@ -42,7 +43,7 @@ namespace EventEmitter
                     sim.Keyboard.ModifiedKeyStroke(VirtualKeyCode.SHIFT, (VirtualKeyCode)key);
                     break;
                 case 0x105: // alt key press
-                    sim.Keyboard.ModifiedKeyStroke(VirtualKeyCode.CONTROL, (VirtualKeyCode)key);
+                    sim.Keyboard.ModifiedKeyStroke(VirtualKeyCode.MENU, (VirtualKeyCode)key);
                     break;
             }
         }

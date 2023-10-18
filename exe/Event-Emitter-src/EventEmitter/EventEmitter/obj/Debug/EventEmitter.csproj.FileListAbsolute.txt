@@ -8,3 +8,13 @@ C:\Users\Marti\source\repos\EventEmitter\EventEmitter\obj\Debug\EventEmitter.pdb
 C:\Users\Marti\source\repos\EventEmitter\EventEmitter\bin\Debug\WindowsInput.dll
 C:\Users\Marti\source\repos\EventEmitter\EventEmitter\bin\Debug\WindowsInput.pdb
 C:\Users\Marti\source\repos\EventEmitter\EventEmitter\bin\Debug\WindowsInput.xml
+C:\Users\Marti\TwitchBotManager\Plugins\TwitchPlaySnes\exe\Event-Emitter-src\EventEmitter\EventEmitter\bin\Debug\EventEmitter.exe.config
+C:\Users\Marti\TwitchBotManager\Plugins\TwitchPlaySnes\exe\Event-Emitter-src\EventEmitter\EventEmitter\bin\Debug\EventEmitter.exe
+C:\Users\Marti\TwitchBotManager\Plugins\TwitchPlaySnes\exe\Event-Emitter-src\EventEmitter\EventEmitter\bin\Debug\EventEmitter.pdb
+C:\Users\Marti\TwitchBotManager\Plugins\TwitchPlaySnes\exe\Event-Emitter-src\EventEmitter\EventEmitter\bin\Debug\GregsStack.InputSimulatorStandard.dll
+C:\Users\Marti\TwitchBotManager\Plugins\TwitchPlaySnes\exe\Event-Emitter-src\EventEmitter\EventEmitter\obj\Debug\EventEmitter.csproj.AssemblyReference.cache
+C:\Users\Marti\TwitchBotManager\Plugins\TwitchPlaySnes\exe\Event-Emitter-src\EventEmitter\EventEmitter\obj\Debug\EventEmitter.csproj.SuggestedBindingRedirects.cache
+C:\Users\Marti\TwitchBotManager\Plugins\TwitchPlaySnes\exe\Event-Emitter-src\EventEmitter\EventEmitter\obj\Debug\EventEmitter.csproj.CoreCompileInputs.cache
+C:\Users\Marti\TwitchBotManager\Plugins\TwitchPlaySnes\exe\Event-Emitter-src\EventEmitter\EventEmitter\obj\Debug\EventEmitter.csproj.CopyComplete
+C:\Users\Marti\TwitchBotManager\Plugins\TwitchPlaySnes\exe\Event-Emitter-src\EventEmitter\EventEmitter\obj\Debug\EventEmitter.exe
+C:\Users\Marti\TwitchBotManager\Plugins\TwitchPlaySnes\exe\Event-Emitter-src\EventEmitter\EventEmitter\obj\Debug\EventEmitter.pdb

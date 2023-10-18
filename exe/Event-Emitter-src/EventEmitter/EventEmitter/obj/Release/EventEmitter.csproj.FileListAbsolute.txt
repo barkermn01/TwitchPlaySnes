@@ -11,12 +11,12 @@ C:\Users\Marti\source\repos\EventEmitter\EventEmitter\bin\Release\WindowsInput.x
 C:\Users\Marti\TwitchBotManager\Plugins\TwitchPlaySnes\exe\Event-Emitter-src\EventEmitter\EventEmitter\bin\Release\EventEmitter.exe.config
 C:\Users\Marti\TwitchBotManager\Plugins\TwitchPlaySnes\exe\Event-Emitter-src\EventEmitter\EventEmitter\bin\Release\EventEmitter.exe
 C:\Users\Marti\TwitchBotManager\Plugins\TwitchPlaySnes\exe\Event-Emitter-src\EventEmitter\EventEmitter\bin\Release\EventEmitter.pdb
-C:\Users\Marti\TwitchBotManager\Plugins\TwitchPlaySnes\exe\Event-Emitter-src\EventEmitter\EventEmitter\bin\Release\WindowsInput.dll
-C:\Users\Marti\TwitchBotManager\Plugins\TwitchPlaySnes\exe\Event-Emitter-src\EventEmitter\EventEmitter\bin\Release\WindowsInput.pdb
-C:\Users\Marti\TwitchBotManager\Plugins\TwitchPlaySnes\exe\Event-Emitter-src\EventEmitter\EventEmitter\bin\Release\WindowsInput.xml
 C:\Users\Marti\TwitchBotManager\Plugins\TwitchPlaySnes\exe\Event-Emitter-src\EventEmitter\EventEmitter\obj\Release\EventEmitter.csproj.AssemblyReference.cache
 C:\Users\Marti\TwitchBotManager\Plugins\TwitchPlaySnes\exe\Event-Emitter-src\EventEmitter\EventEmitter\obj\Release\EventEmitter.csproj.SuggestedBindingRedirects.cache
 C:\Users\Marti\TwitchBotManager\Plugins\TwitchPlaySnes\exe\Event-Emitter-src\EventEmitter\EventEmitter\obj\Release\EventEmitter.csproj.CoreCompileInputs.cache
 C:\Users\Marti\TwitchBotManager\Plugins\TwitchPlaySnes\exe\Event-Emitter-src\EventEmitter\EventEmitter\obj\Release\EventEmitter.csproj.CopyComplete
 C:\Users\Marti\TwitchBotManager\Plugins\TwitchPlaySnes\exe\Event-Emitter-src\EventEmitter\EventEmitter\obj\Release\EventEmitter.exe
 C:\Users\Marti\TwitchBotManager\Plugins\TwitchPlaySnes\exe\Event-Emitter-src\EventEmitter\EventEmitter\obj\Release\EventEmitter.pdb
+C:\Users\Marti\TwitchBotManager\Plugins\TwitchPlaySnes\exe\Event-Emitter-src\EventEmitter\EventEmitter\bin\Release\WindowsInput.dll
+C:\Users\Marti\TwitchBotManager\Plugins\TwitchPlaySnes\exe\Event-Emitter-src\EventEmitter\EventEmitter\bin\Release\WindowsInput.pdb
+C:\Users\Marti\TwitchBotManager\Plugins\TwitchPlaySnes\exe\Event-Emitter-src\EventEmitter\EventEmitter\bin\Release\WindowsInput.xml
