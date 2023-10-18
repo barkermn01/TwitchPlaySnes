@@ -1,0 +1,6 @@
+Reading config file C:\Users\Marti\TwitchBotManager\Plugins\TwitchPlaySnes\lib\..\exe\snes9x.conf.
+Saving	config file	C:\Users\Marti\TwitchBotManager\Plugins\TwitchPlaySnes\lib\..\exe\snes9x.conf
+Found ROM file header (and ignored it).
+Map_HiROMMap
+"FINAL FANTASY 5" [bad checksum] HiROM, 16Mbits, ROM+RAM+BAT, NTSC, SRAM:64Kbits, ID:2o4_, CRC32:17444605
+Saving	config file	C:\Users\Marti\TwitchBotManager\Plugins\TwitchPlaySnes\lib\..\exe\snes9x.conf
